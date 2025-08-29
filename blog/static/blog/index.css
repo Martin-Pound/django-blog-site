@@ -1,5 +1,5 @@
 #welcome {
-  background: linear-gradient(to right top, #2d5d98, #22426c);
+  background: linear-gradient(to right top, #193455, #3362a1);
   padding: 6rem 12%;
 }
 
@@ -14,7 +14,7 @@
   height: 10rem;
   object-fit: cover;
   object-position: top;
-  border: 5px solid #ff6f61;
+  border: 5px solid white;
   border-radius: 12px;
   background-color: #ff6f61;
   transform: rotateZ(-5deg);
@@ -56,6 +56,17 @@
 
 #latest-posts li {
   flex: 1;
+  text-align: center;
+}
+
+#latest-posts img {
+  display: block;
+  margin: auto;
+  width: 8rem; /* Adjust size as needed */
+  height: 8rem; /* Ensure width and height are equal for a perfect circle */
+  border-radius: 50%; /* Makes the image circular */
+  object-fit: cover; /* Ensures the image fits within the circle */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); /* Optional: Adds a shadow for better aesthetics */
 }
 
 #about {
