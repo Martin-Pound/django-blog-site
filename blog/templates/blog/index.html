@@ -1,11 +1,49 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'blog/index.css' %}">
+{% endblock %}
 
 {% block title %}
     My Blog
 {% endblock %}
 
 {% block content %}
-    <h1>Blog Posts</h1>
-    <p>Page coming soon</p>
+    <header id="main-navigation">
+        <h1><a href="">Martin's Blog</a></h1>
+        <nav>
+            <a href="">All Posts</a>
+        </nav>
+    </header>
+
+    <section id="welcome">
+        <header>
+            <img src="{% static "blog/images/Martin.png" %}" alt="Martin's picture - Author of this blog">
+            <h2>Martin's Blog</h2>
+        </header>
+        <p>Hi, I am Martin and I like to blog about tech and smart industries</p>
+    </section>
+
+    <section id="latest-posts">
+        <h2>My Latest Posts</h2>
+        <ul>
+            <li>
+                <article class="post">
+                    <a href="">
+                        <img src="" alt="Surfing image">
+                        <h3>Why I should have never gone surfing</h3>
+                        <p>There is nothing like the feeling of dropping into a wave. But surfing in the UK can make you wish you never knew what you were missing!</p>
+                    </a>
+                </article>
+            </li>
+        </ul>
+    </section>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>I'm Martin, a software developer and tech enthusiast. I love exploring new technologies and sharing my industry experiences through this blog. When I'm not coding, you can find me surfing or exploring the great outdoors.</p>
+    </section>
+
 {% endblock %}
 
