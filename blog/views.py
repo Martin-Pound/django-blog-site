@@ -26,5 +26,6 @@ def posts(request):
 def post_detail(request, slug):
     identified_post = get_object_or_404(Post, slug=slug) #Fetch a single post by its slug or return 404 if not found
     return render(request, "blog/post-detail.html", {
-        "post": identified_post
+        "post": identified_post,
+        "tags": identified_post.tags.all()
     })
