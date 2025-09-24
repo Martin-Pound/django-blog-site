@@ -30,7 +30,7 @@ class Post(models.Model):
     date = models.DateField(auto_now=True)
     slug = models.SlugField(unique=True, db_index=True) # Unique slug for URL references title
     content = models.TextField()
-    author = models.ForeignKey(Author, on_delete=models.SET_NULL, related_name="posts") # Foreign key relationship with Author
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, related_name="posts") # Foreign key relationship with Author
     tags = models.ManyToManyField(Tag) # Many-to-many relationship with Tag
 
     def get_absolute_url(self):
