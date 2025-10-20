@@ -26,7 +26,7 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=100)
     excerpt = models.CharField(max_length=200)
-    image = models.CharField(max_length=100) # TEMPORARY: URL or path to the image
+    image = models.ImageField(upload_to="posts") # ImageField to handle image uploads
     date = models.DateField(auto_now=True)
     slug = models.SlugField(unique=True, db_index=True) # Unique slug for URL references title
     content = models.TextField()
