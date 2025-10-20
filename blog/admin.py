@@ -1,7 +1,10 @@
 from symtable import Class
 
 from django.contrib import admin
-from .models import Post, Author, Tag
+from django.template.defaulttags import comment
+
+from .models import Post, Author, Tag, Comment
+
 
 # Register your models here.
 
@@ -17,6 +20,11 @@ class AuthorAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ("caption",) #displays the tag caption in the admin list view
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("user_name", "post") #displays the user name and associated post in the admin list view
+    search_fields = ("user_name", "user_email") #adds a search bar to search comments by user name or email
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Comment)

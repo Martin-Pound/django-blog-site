@@ -41,3 +41,9 @@ class Post(models.Model):
 
     class Meta:
         verbose_name_plural = "Posts"
+
+class Comment(models.Model):
+    user_name = models.CharField(max_length=120)
+    user_email = models.EmailField()
+    text = models.TextField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments") # Foreign key relationship with Post
