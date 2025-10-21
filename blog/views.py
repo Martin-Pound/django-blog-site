@@ -39,13 +39,23 @@ class SinglePostView(View): #replaces post_detail function-based view
     template_name = "blog/post-detail.html"
     model = Post
 
+    def is_stored_post(self, request, post_id):
+        stored_posts = request.session.get("stored_posts")
+        if stored_posts is not None:
+            is_saved_for_later = post_id in stored_posts
+        else:
+            is_saved_for_later = False
+        return is_saved_for_later
+
     def get (self, request, slug):
-        identified_post = get_object_or_404(Post, slug=slug) #Fetch a single post by its slug or return 404 if not found
+        identified_post = get_object_or_404(Post, slug=slug)
+
         context = {
             "post": identified_post,
             "tags": identified_post.tags.all(),
             "comment_form": CommentForm, #add an empty comment form to the context
-            "comments": identified_post.comments.all().order_by("-id") #fetch all comments related to the post
+            "comments": identified_post.comments.all().order_by("-id"), #fetch all comments related to the post
+            "is_saved_for_later": self.is_stored_post(request, identified_post.id)
         }
         return render(request, self.template_name, context)
 
@@ -63,7 +73,8 @@ class SinglePostView(View): #replaces post_detail function-based view
                 "post": identified_post,
                 "tags": identified_post.tags.all(),
                 "comment_form": comment_form, # Return the form with errors
-                "comments": identified_post.comments.all().order_by("-id") #fetch all comments related to the post
+                "comments": identified_post.comments.all().order_by("-id"), #fetch all comments related to the post
+                "is_saved_for_later": self.is_stored_post(request, identified_post.id)
             }
             return render(request, self.template_name, context)
 
@@ -87,8 +98,12 @@ class ReadLaterView(View):
             stored_posts = []
 
         post_id = int(request.POST["post_id"]) #get post ID from the form data, do not add object directly to session
+
         if post_id not in stored_posts:
             stored_posts.append(post_id)
-            request.session["stored_posts"] = stored_posts
+        else:
+            stored_posts.remove(post_id)
+
+        request.session["stored_posts"] = stored_posts
 
         return HttpResponseRedirect("/")
