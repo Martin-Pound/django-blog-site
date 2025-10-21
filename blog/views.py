@@ -3,6 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post
 from django.views.generic import ListView, DetailView
 from. forms import CommentForm
+from django.views import View
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 #VIEWS
@@ -32,19 +35,36 @@ class AllPostsView(ListView): #replaces posts function-based view
 #           "all_posts": all_posts
 #     })
 
-class SinglePostView(DetailView): #replaces post_detail function-based view
+class SinglePostView(View): #replaces post_detail function-based view
     template_name = "blog/post-detail.html"
     model = Post
-    context_object_name = "post"
 
-    def get_context_data(self, **kwargs): # Adds extra context (tags) to the template
-        context = super().get_context_data(**kwargs)
-        context["tags"] = self.object.tags.all()
-        context["comment_form"] = CommentForm() #add an empty comment form to the context
-        return context
-# def post_detail(request, slug):
-#     identified_post = get_object_or_404(Post, slug=slug) #Fetch a single post by its slug or return 404 if not found
-#     return render(request, "blog/post-detail.html", {
-#         "post": identified_post,
-#         "tags": identified_post.tags.all()
-#     })
+    def get (self, request, slug):
+        identified_post = get_object_or_404(Post, slug=slug) #Fetch a single post by its slug or return 404 if not found
+        context = {
+            "post": identified_post,
+            "tags": identified_post.tags.all(),
+            "comment_form": CommentForm, #add an empty comment form to the context
+            "comments": identified_post.comments.all().order_by("-id") #fetch all comments related to the post
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, slug): #Handles form submission for comments
+        comment_form = CommentForm(request.POST)
+        post = Post.objects.get(slug=slug)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post  # Associate the comment with the current post
+            comment.save()
+            return HttpResponseRedirect(reverse("post-detail", args=[slug]))  # Redirect to the same page after processing the form
+        else:
+            identified_post = get_object_or_404(Post, slug=slug)
+            context = {
+                "post": identified_post,
+                "tags": identified_post.tags.all(),
+                "comment_form": comment_form, # Return the form with errors
+                "comments": identified_post.comments.all().order_by("-id") #fetch all comments related to the post
+            }
+            return render(request, self.template_name, context)
+
+
